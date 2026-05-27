@@ -38,12 +38,12 @@ graph TD
     classDef ai fill:#0a0a0a,stroke:#b39ddb,stroke-width:2px,color:#fff
     classDef blockchain fill:#111,stroke:#3b82f6,stroke-width:1px,color:#fff
 
-    Dashboard[React Dashboard]:::client
-    Agent[Agent Node Server]:::ai
-    Gemini[Gemini API]:::ai
+    Dashboard["React Dashboard"]:::client
+    Agent["Agent Node Server"]:::ai
+    Gemini["Gemini API"]:::ai
     
-    Arc[Arc Testnet L1]:::blockchain
-    Poly[Prediction Markets]:::blockchain
+    Arc["Arc Testnet L1"]:::blockchain
+    Poly["Prediction Markets"]:::blockchain
 
     Agent -->|"1. Fetch Odds"| Poly
     Agent -->|"2. Ask Analysis"| Gemini
