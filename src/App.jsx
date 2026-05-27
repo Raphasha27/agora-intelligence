@@ -1,17 +1,21 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Activity, BrainCircuit, Globe2, Wallet, RefreshCw, BarChart2, Zap } from 'lucide-react';
+import { Activity, BrainCircuit, Globe2, Wallet, RefreshCw, BarChart2, Zap, Network } from 'lucide-react';
+import { LineChart, Line, ResponsiveContainer, YAxis } from 'recharts';
+
+const generateChartData = (base) => Array.from({ length: 20 }, (_, i) => ({ value: base + (Math.random() * 10 - 5) + (i * 0.5) }));
 
 const MOCK_MARKETS = [
-  { id: 'M-101', title: 'Will the US Federal Reserve cut rates by 25bps in June?', currentOdds: 0.54, type: 'MACRO', expectedEdge: '+12.4%' },
-  { id: 'M-102', title: 'Will Ethereum ETF be approved by July?', currentOdds: 0.45, type: 'CRYPTO', expectedEdge: '+18.1%' },
-  { id: 'M-103', title: 'Will SpaceX land Starship on Mars by 2026?', currentOdds: 0.22, type: 'TECH', expectedEdge: '+8.7%' },
+  { id: 'M-101', title: 'Will the US Federal Reserve cut rates by 25bps in June?', currentOdds: 0.54, type: 'MACRO', expectedEdge: '+12.4%', history: generateChartData(45) },
+  { id: 'M-102', title: 'Will Ethereum ETF be approved by July?', currentOdds: 0.45, type: 'CRYPTO', expectedEdge: '+18.1%', history: generateChartData(30) },
+  { id: 'M-103', title: 'Will SpaceX land Starship on Mars by 2026?', currentOdds: 0.22, type: 'TECH', expectedEdge: '+8.7%', history: generateChartData(15) },
 ];
 
 function App() {
   const [activeTab, setActiveTab] = useState('markets');
   const [walletBalance, setWalletBalance] = useState(1240.50);
   const [logs, setLogs] = useState([]);
+  const [reasoningLogs, setReasoningLogs] = useState([]);
   const [activeMarket, setActiveMarket] = useState(MOCK_MARKETS[0]);
   const [reasoning, setReasoning] = useState([]);
   const [isExecuting, setIsExecuting] = useState(false);
@@ -50,11 +54,19 @@ function App() {
         setActiveMarket(market);
         
         addLog('AI', `Evaluated market: "${market.title.slice(0, 20)}..."`, 'text-purple-400');
-        setReasoning([
+        const newReasoning = [
           '> Ingesting recent data points...',
           '> Contextualizing with Gemini LLM...',
           `> EV Calculation: ${market.expectedEdge} edge found.`
-        ]);
+        ];
+        setReasoning(newReasoning);
+        
+        setReasoningLogs(prev => [{
+          id: Date.now(),
+          market: market.title,
+          time: new Date().toLocaleTimeString([], { hour12: false }),
+          traces: newReasoning
+        }, ...prev].slice(0, 10));
 
         await new Promise(r => setTimeout(r, 3000));
 
@@ -184,6 +196,16 @@ function App() {
                     </div>
                   </div>
 
+                  {/* Sparkline Chart */}
+                  <div className="h-16 mb-6 w-full opacity-80">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <LineChart data={activeMarket.history}>
+                        <YAxis domain={['dataMin', 'dataMax']} hide />
+                        <Line type="monotone" dataKey="value" stroke="#00ffcc" strokeWidth={2} dot={false} isAnimationActive={false} />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+
                   <div className="bg-[#0b1016] p-4 rounded-xl border border-white/5 mb-4 relative z-10">
                     <div className="flex items-center gap-2 mb-2">
                       <BrainCircuit className="w-4 h-4 text-purple-400" />
@@ -261,6 +283,44 @@ function App() {
                     )}
                   </tbody>
                 </table>
+              </div>
+            </motion.div>
+          )}
+
+          {/* Reasoning Logs View */}
+          {activeTab === 'reasoning_logs' && (
+            <motion.div 
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+              className="space-y-4"
+            >
+              <h2 className="text-lg font-semibold text-white flex items-center gap-2 mb-4">
+                <Network className="w-5 h-5 text-purple-400" /> Historical Reasoning Traces
+              </h2>
+              
+              <div className="space-y-4">
+                <AnimatePresence>
+                  {reasoningLogs.map((log) => (
+                    <motion.div 
+                      key={log.id}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="glass-panel p-4 border border-border"
+                    >
+                      <div className="flex justify-between items-start mb-3">
+                        <span className="text-sm font-medium text-white">{log.market}</span>
+                        <span className="text-xs font-mono text-gray-500">{log.time}</span>
+                      </div>
+                      <div className="bg-[#0a0f16] p-3 rounded border border-white/5 font-mono text-xs text-gray-400 space-y-1">
+                        {log.traces.map((t, idx) => (
+                          <div key={idx} className={t.includes('EV Calculation') ? 'text-accent' : ''}>{t}</div>
+                        ))}
+                      </div>
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
+                {reasoningLogs.length === 0 && (
+                  <div className="text-center p-8 text-gray-500 italic glass-panel">Waiting for AI evaluations...</div>
+                )}
               </div>
             </motion.div>
           )}
