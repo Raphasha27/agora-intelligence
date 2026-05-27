@@ -68,7 +68,12 @@ While this was built rapidly, the architecture is designed to support the **Buil
 
 We've made sure this project runs straight out of the box with zero complex dependencies.
 
-### 1. Run the Dashboard UI
+## 🌐 Live Demo & Deployment
+
+**The project is deployed and live!**
+👉 **[View Agora Intelligence Live](https://agora-intelligence.vercel.app/)**
+
+You can also run it locally:
 ```bash
 # Clone the repo
 git clone https://github.com/Raphasha27/agora-intelligence.git
