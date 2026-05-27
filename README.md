@@ -6,7 +6,7 @@
   [![Tech](https://img.shields.io/badge/Tech-React_Vite_Tailwind-00ffcc?style=for-the-badge&logo=react)](#)
 </div>
 
-# dY"? AgoraBot Intelligence (Agora Agents Hackathon)
+# 🤖 AgoraBot Intelligence (Agora Agents Hackathon)
 
 **AgoraBot** is an autonomous AI agent built for the **Canteen × Circle × Arc Agora Agents Hackathon**. It is designed specifically to address **RFB 02: Prediction Market Trader Intelligence**.
 
@@ -14,7 +14,7 @@ By continuously ingesting news, sentiment, and Polymarket API data, AgoraBot ide
 
 ---
 
-## dY > The Problem & The RFB 02 Solution
+## 🎯 The Problem & The RFB 02 Solution
 
 Prediction markets like Polymarket offer powerful aggregation of human knowledge, but humans are too slow to parse thousands of noisy news signals and adjust their positions before the market corrects. 
 
@@ -23,7 +23,7 @@ Prediction markets like Polymarket offer powerful aggregation of human knowledge
 2. **Exposes Reasoning:** Emits structured JSON reasoning traces (inspired by the Trading-R1 paper) so users can see *why* an action was taken.
 3. **Settles on Arc:** Takes advantage of Arc's sub-second finality and ~$0.01 USDC transaction fees to execute trades that would be unviable on other L1s due to gas costs.
 
-## dY"? System Architecture
+## 🏗️ System Architecture
 
 ```mermaid
 graph TD
@@ -48,7 +48,7 @@ graph TD
     Agent -->|5. WebSocket Updates| Dashboard
 ```
 
-## dYS" UI / UX
+## 💻 UI / UX
 
 The project includes a glassmorphism **Agent Dashboard** where users can monitor the agent's autonomous loop.
 - **Live Opportunities:** Shows the current markets the agent is evaluating.
@@ -56,11 +56,11 @@ The project includes a glassmorphism **Agent Dashboard** where users can monitor
 - **Execution Log:** Real-time activity feed showing market scans and Arc L1 transaction hashes.
 - **Wallet Panel:** Real-time USDC balance via the Arc Testnet.
 
-## dYO  Traction & Hackathon Viability
+## 📈 Traction & Hackathon Viability
 
 While this was built rapidly, the architecture is designed to support the **Builder Code Monetization** mechanism. The agent acts as a builder, recommending trades and earning a micro-fee in USDC for every user that follows its trace. With Arc's minimal fees, this retail-sized copy-trading becomes economically viable.
 
-## dY" Local Development
+## 🚀 Local Development
 
 Ensure you have the ARC CLI installed:
 `uv tool install git+https://github.com/the-canteen-dev/ARC-cli`
@@ -77,7 +77,7 @@ npm install
 npm run dev
 ```
 
-## dY"' Author
+## 👨‍💻 Author
 **Koketso Raphasha**  
 *Autonomous AI Engineer*  
 [Portfolio](https://portfolio-iota-eight-90.vercel.app/) | [GitHub](https://github.com/Raphasha27)
