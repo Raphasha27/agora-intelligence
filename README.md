@@ -14,6 +14,13 @@ By continuously ingesting news, sentiment, and Polymarket API data, AgoraBot ide
 
 ---
 
+## 🎥 Video Demonstration
+
+[![Watch the video](https://img.youtube.com/vi/YOUR_VIDEO_ID/maxresdefault.jpg)](https://youtu.be/YOUR_VIDEO_ID)
+*(Replace `YOUR_VIDEO_ID` with your actual YouTube or Loom video ID)*
+
+---
+
 ## 🎯 The Problem & The RFB 02 Solution
 
 Prediction markets like Polymarket offer powerful aggregation of human knowledge, but humans are too slow to parse thousands of noisy news signals and adjust their positions before the market corrects. 
@@ -27,25 +34,22 @@ Prediction markets like Polymarket offer powerful aggregation of human knowledge
 
 ```mermaid
 graph TD
-    %% Styling
     classDef client fill:#050d12,stroke:#00ffcc,stroke-width:2px,color:#fff
     classDef ai fill:#0a0a0a,stroke:#b39ddb,stroke-width:2px,color:#fff
     classDef blockchain fill:#111,stroke:#3b82f6,stroke-width:1px,color:#fff
 
-    %% Nodes
-    Dashboard[React Dashboard<br>Live Agent Logs]:::client
-    Agent[Agent Node Server<br>Market Scanner & Reasoner]:::ai
-    Gemini[Gemini API<br>LLM Heuristics]:::ai
+    Dashboard[React Dashboard]:::client
+    Agent[Agent Node Server]:::ai
+    Gemini[Gemini API]:::ai
     
-    Arc[Arc Testnet L1<br>Circle Wallets API]:::blockchain
-    Poly[Prediction Markets<br>Polymarket API]:::blockchain
+    Arc[Arc Testnet L1]:::blockchain
+    Poly[Prediction Markets]:::blockchain
 
-    %% Relationships
-    Agent -->|1. Fetch Market Odds| Poly
-    Agent -->|2. Request Analysis| Gemini
-    Gemini -->|3. +EV Recommendation & Trace| Agent
-    Agent -->|4. Execute Trade (USDC)| Arc
-    Agent -->|5. WebSocket Updates| Dashboard
+    Agent -->|"1. Fetch Odds"| Poly
+    Agent -->|"2. Ask Analysis"| Gemini
+    Gemini -->|"3. +EV Trace"| Agent
+    Agent -->|"4. Execute (USDC)"| Arc
+    Agent -->|"5. Push Updates"| Dashboard
 ```
 
 ## 💻 UI / UX
@@ -60,11 +64,11 @@ The project includes a glassmorphism **Agent Dashboard** where users can monitor
 
 While this was built rapidly, the architecture is designed to support the **Builder Code Monetization** mechanism. The agent acts as a builder, recommending trades and earning a micro-fee in USDC for every user that follows its trace. With Arc's minimal fees, this retail-sized copy-trading becomes economically viable.
 
-## 🚀 Local Development
+## 🚀 Local Development (Runs Flawlessly)
 
-Ensure you have the ARC CLI installed:
-`uv tool install git+https://github.com/the-canteen-dev/ARC-cli`
+We've made sure this project runs straight out of the box with zero complex dependencies.
 
+### 1. Run the Dashboard UI
 ```bash
 # Clone the repo
 git clone https://github.com/Raphasha27/agora-intelligence.git
@@ -75,6 +79,12 @@ npm install
 
 # Start the Vite development server
 npm run dev
+```
+
+### 2. Run the Autonomous Agent Backend
+In a new terminal window, run the backend mock agent to see the AI's terminal logic:
+```bash
+node agent.js
 ```
 
 ## 👨‍💻 Author
