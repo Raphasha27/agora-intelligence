@@ -15,6 +15,11 @@ function App() {
   const [activeMarket, setActiveMarket] = useState(MOCK_MARKETS[0]);
   const [reasoning, setReasoning] = useState([]);
   const [isExecuting, setIsExecuting] = useState(false);
+  const [confidenceThreshold, setConfidenceThreshold] = useState(65);
+  const [positions, setPositions] = useState([
+    { id: 'pos-1', market: 'Will Ethereum ETF be approved by July?', side: 'YES', amount: 200, entryPrice: 0.42, currentPrice: 0.45, pnl: '+14.28 USDC' },
+    { id: 'pos-2', market: 'Will Bitcoin reach $100k in 2024?', side: 'NO', amount: 150, entryPrice: 0.65, currentPrice: 0.60, pnl: '+11.53 USDC' }
+  ]);
   const logEndRef = useRef(null);
 
   // Auto-scroll logs
@@ -61,6 +66,17 @@ function App() {
           
           const txHash = '0x' + Math.random().toString(16).substr(2, 8);
           setWalletBalance(prev => prev - 100);
+          
+          setPositions(prev => [{
+            id: 'pos-' + Date.now(),
+            market: market.title,
+            side: 'YES',
+            amount: 100,
+            entryPrice: market.currentOdds,
+            currentPrice: market.currentOdds,
+            pnl: '0.00 USDC'
+          }, ...prev].slice(0, 5));
+          
           addLog('ARC', `Transaction settled on L1. Hash: ${txHash}`, 'text-accent');
           setIsExecuting(false);
         } else {
@@ -202,6 +218,52 @@ function App() {
               </AnimatePresence>
             </div>
           )}
+
+          {/* Positions View */}
+          {activeTab === 'positions' && (
+            <motion.div 
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+              className="space-y-4"
+            >
+              <h2 className="text-lg font-semibold text-white flex items-center gap-2 mb-4">
+                <BarChart2 className="w-5 h-5 text-gray-400" /> Active Positions
+              </h2>
+              
+              <div className="glass-panel overflow-hidden border border-border">
+                <table className="w-full text-left text-sm">
+                  <thead className="bg-[#0b1016] border-b border-border text-xs uppercase font-mono text-gray-400">
+                    <tr>
+                      <th className="px-4 py-3">Market</th>
+                      <th className="px-4 py-3">Side</th>
+                      <th className="px-4 py-3">Amount</th>
+                      <th className="px-4 py-3">Avg Entry</th>
+                      <th className="px-4 py-3">Unrealized PnL</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border">
+                    {positions.map((pos) => (
+                      <tr key={pos.id} className="hover:bg-white/5 transition-colors">
+                        <td className="px-4 py-3 font-medium text-white">{pos.market}</td>
+                        <td className="px-4 py-3">
+                          <span className={`px-2 py-1 rounded text-xs font-mono font-bold ${pos.side === 'YES' ? 'bg-green-500/10 text-green-400' : 'bg-red-500/10 text-red-400'}`}>
+                            {pos.side}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3 font-mono">{pos.amount}</td>
+                        <td className="px-4 py-3 font-mono">{pos.entryPrice.toFixed(2)}¢</td>
+                        <td className="px-4 py-3 font-mono text-green-400">{pos.pnl}</td>
+                      </tr>
+                    ))}
+                    {positions.length === 0 && (
+                      <tr>
+                        <td colSpan="5" className="px-4 py-8 text-center text-gray-500 italic">No active positions.</td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </motion.div>
+          )}
         </div>
 
         {/* Right Column - Status & Activity */}
@@ -220,9 +282,18 @@ function App() {
                   AUTONOMOUS
                 </span>
               </div>
-              <div className="flex justify-between items-center pb-3 border-b border-border">
-                <span className="text-sm text-gray-300">Confidence Threshold</span>
-                <span className="text-sm font-mono text-white">65%</span>
+              <div className="flex flex-col justify-between items-start pb-3 border-b border-border gap-2">
+                <div className="flex justify-between w-full">
+                  <span className="text-sm text-gray-300">Confidence Threshold</span>
+                  <span className="text-sm font-mono text-accent">{confidenceThreshold}%</span>
+                </div>
+                <input 
+                  type="range" 
+                  min="50" max="95" 
+                  value={confidenceThreshold} 
+                  onChange={(e) => setConfidenceThreshold(e.target.value)}
+                  className="w-full h-1 bg-gray-800 rounded-lg appearance-none cursor-pointer accent-accent"
+                />
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm text-gray-300">Exposure Limit</span>
